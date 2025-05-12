@@ -1,4 +1,4 @@
-package com.itheima.pojo;
+package com.chasion.eventbackend.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

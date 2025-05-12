@@ -2,6 +2,7 @@ package com.chasion.eventbackend.mapper;
 
 import com.chasion.eventbackend.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
 import java.time.LocalDateTime;
 
@@ -15,4 +16,7 @@ public interface UserMapper {
     int updateUser(User user);
 
     int updatePwd(int id, String newPwd, LocalDateTime updateTime);
+
+    @Update("update user set user_pic = #{avatarUrl} where id = #{id}")
+    int updateAvatarUrl(int id, String avatarUrl);
 }

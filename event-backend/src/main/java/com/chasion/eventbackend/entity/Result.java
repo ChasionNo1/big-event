@@ -15,13 +15,13 @@ public class Result<T> {
     private T data;//响应数据
 
     //快速返回操作成功响应结果(带响应数据)
-    public static <E> Result<E> success(E data) {
-        return new Result<>(0, "操作成功", data);
+    public static <E> Result<E> success(String message, E data) {
+        return new Result<>(0, message, data);
     }
 
     //快速返回操作成功响应结果
-    public static Result success() {
-        return new Result(0, "操作成功", null);
+    public static Result success(String message) {
+        return new Result(0, message, null);
     }
 
     public static Result error(String message) {

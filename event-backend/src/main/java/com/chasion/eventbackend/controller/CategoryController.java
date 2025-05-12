@@ -13,6 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
+@CrossOrigin(
+        origins = "*",
+        allowedHeaders = "*", // 或列出具体头部（如 "Authorization", "Content-Type"）
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.PATCH}
+)
 public class CategoryController {
 // 获取文章分类列表
     @Autowired
@@ -24,7 +29,7 @@ public class CategoryController {
         if (categories.isEmpty()) {
             return Result.error("没有分类数据");
         }else {
-            return Result.success(categories);
+            return Result.success(null, categories);
         }
     }
 //    新增文章分类
@@ -43,7 +48,7 @@ public class CategoryController {
             newCategory.setCreateTime(LocalDateTime.now());
             newCategory.setUpdateTime(LocalDateTime.now());
             categoryService.addCategory(newCategory);
-            return Result.success();
+            return Result.success("添加成功");
         }
     }
 
@@ -61,7 +66,7 @@ public class CategoryController {
             categoryById.setCategoryAlias(categoryAlias);
             categoryById.setUpdateTime(LocalDateTime.now());
             categoryService.updateCategory(categoryById);
-            return Result.success();
+            return Result.success(null);
         }
     }
 
@@ -72,7 +77,7 @@ public class CategoryController {
         if (category == null) {
             return Result.error(null);
         }else {
-            return Result.success(category);
+            return Result.success(null, category);
         }
     }
 
@@ -81,10 +86,10 @@ public class CategoryController {
     public Result deleteCategoryById(@RequestParam("id") int id) {
         Category category = categoryService.findCategoryById(id);
         if (category == null) {
-            return Result.error(null);
+            return Result.error("该分类不存在");
         }else {
             categoryService.deleteCategoryById(id);
-            return Result.success();
+            return Result.success("删除成功");
         }
     }
 }

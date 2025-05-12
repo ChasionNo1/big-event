@@ -42,4 +42,9 @@ public class UserServiceImpl implements UserService {
         userMapper.updatePwd(id, newPwd, updateTime);
     }
 
+    @Override
+    public void updateAvatarUrl(int id, String avatarUrl) {
+        userMapper.updateAvatarUrl(id, avatarUrl);
+    }
+
 }

@@ -10,4 +10,25 @@
         insert into article (title,content,cover_img,state,category_id,create_user,create_time, update_time)
         values (#{title}, #{content}, #{coverImg}, #{state}, #{categoryId}, #{createUser}, #{createTime}, #{updateTime})
     </insert>
+
+<!--    int updateArticle(Article article);-->
+    <update id="updateArticle">
+        update article set title=#{title}, content =#{content}, cover_img=#{coverImg}, state=#{state}, category_id=#{categoryId} where id =#{id}
+    </update>
+
+<!--    List<Article> findArticleByPage(int id, int categoryId, String state);-->
+    <select id="findArticleByPage" resultType="Article">
+        select * from article
+        <where>
+            <if test="categoryId!=null">
+                category_id=#{categoryId}
+            </if>
+            <if test="state!=null">
+                and state=#{state}
+            </if>
+            and create_user =#{id}
+        </where>
+
+
+    </select>
 </mapper>

@@ -19,6 +19,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 @Validated
+@CrossOrigin(
+        origins = "*",
+        allowedHeaders = "*", // 或列出具体头部（如 "Authorization", "Content-Type"）
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.PATCH}
+)
 public class UserController {
 
     @Autowired
@@ -31,7 +36,7 @@ public class UserController {
         if (u == null) {
             //        注册用户
             userService.register(username, password);
-            return Result.success();
+            return Result.success("注册成功");
         }else {
             return Result.error("用户名已被占用");
         }
@@ -54,8 +59,7 @@ public class UserController {
                 claim.put("id", loginUser.getId());
                 claim.put("username", loginUser.getUsername());
                 String token = JwtUtil.genToken(claim);
-
-                return Result.success(token);
+                return Result.success("登录成功", token);
             }
         }
         return Result.error("密码错误");
@@ -71,7 +75,7 @@ public class UserController {
         if (user == null) {
             return Result.error("用户不存在");
         }
-        return Result.success(user);
+        return Result.success(null, user);
     }
 
     // 更改用户信息
@@ -80,20 +84,26 @@ public class UserController {
 //        更新一下修改时间
         user.setUpdateTime(LocalDateTime.now());
         userService.updateUserInfo(user);
-        return Result.success();
+        return Result.success("更改成功");
     }
 
-    // 更新用户头像
+//     更新用户头像地址
 //    一开始设置一个默认的初始头像，后续用户根据需要进行修改
-//    需要上传文件
-//    @PostMapping("/updateAvatar")
+    @PatchMapping("/updateAvatar")
+    public Result updateAvatar(@RequestParam("avatarUrl") String avatarUrl) {
+        // 根据id，查找修改
+        HashMap<String, Object> map = ThreadLocalUtil.get();
+        Integer id = (Integer) map.get("id");
+        userService.updateAvatarUrl(id, avatarUrl);
+        return Result.success("更新成功");
+    }
 
 //    修改密码
     @PatchMapping("/updatePwd")
     public Result updatePwd(@RequestBody Map<String, Object> input) {
-        String oldPwd = (String) input.get("old_pwd");
-        String newPwd = (String) input.get("new_pwd");
-        String rePwd = (String) input.get("re_pwd");
+        String oldPwd = (String) input.get("oldPassword");
+        String newPwd = (String) input.get("newPassword");
+        String rePwd = (String) input.get("rePassword");
 //        先进行校验
         if (StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd) || StringUtils.isEmpty(rePwd)) {
             return Result.error("输入为空!");
@@ -114,7 +124,7 @@ public class UserController {
                 }
             }
         }
-        return Result.success();
+        return Result.success("修改成功");
     }
 
 
